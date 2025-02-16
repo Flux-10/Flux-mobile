@@ -1,0 +1,40 @@
+You can go with 3 to 5 onboarding screens, depending on how much information you want to introduce before users sign up. Here’s a structured flow with suggested text for each screen:
+
+ Option 1: 3 Onboarding Screens (Concise & Engaging)  
+
+1. Screen 1 – Welcome to [App Name]  
+   - "Find meaningful connections within your university."  
+   - "Swipe, match, and chat with like-minded students."  
+
+2. Screen 2 – Smart Matching  
+   - "Our AI-powered matchmaking helps you find your perfect match."  
+   - "Personalized suggestions based on your interests and preferences."  
+
+3. Screen 3 – Get Started  
+   - "Create your profile, start exploring, and let the sparks fly!"  
+   - (Button: "Sign Up" / "Log In")  
+
+---
+
+ Option 2: 5 Onboarding Screens (More Detailed Introduction)  
+
+1. Screen 1 – Welcome to [App Name]  
+   - "The ultimate dating experience for students in your university."  
+   - "Meet new people, spark connections, and build relationships."  
+
+2. Screen 2 – AI-Powered Matching  
+   - "Our AI understands your preferences and suggests the best matches for you."  
+   - "No random swipes—just meaningful connections."  
+
+3. Screen 3 – Chat Smarter  
+   - "Too shy to start a conversation? Use AI-powered text suggestions!"  
+   - "Break the ice with personalized and engaging responses."  
+
+4. Screen 4 – Earn & Use Tokens  
+   - "Unlock AI features and premium perks with in-app tokens."  
+   - "Purchase or earn tokens through special activities."  
+
+5. Screen 5 – Ready to Connect?  
+   - "Create your profile and start meeting exciting people today!"  
+   - (Button: "Sign Up" / "Log In")  
+ 
