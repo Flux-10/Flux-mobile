@@ -241,6 +241,7 @@ class _SignInPageState extends State<SignInPage> {
                                                 fontWeight: FontWeight.w600,
                                               ),
                                               recognizer: TapGestureRecognizer()
+                                            
                                                 ..onTap = () {
                                                   Navigator.pushNamed(context, Routes.signup);
                                                 },

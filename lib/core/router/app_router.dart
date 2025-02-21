@@ -11,6 +11,8 @@ import 'package:flux/Auth/Screen/reset_password.dart';
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+
+      //!AUTHENTICATION ROUTES
       //Splash Screen
       case Routes.splash:
       return  MaterialPageRoute(builder: (_) => const SplashScreen());
@@ -35,6 +37,8 @@ class AppRouter {
       
       case Routes.resetPassword:
         return MaterialPageRoute(builder: (_) => const ResetPasswordPage());
+
+        //! AUTHERNTICATION ROUTES END
 
     //Home Screen
     
