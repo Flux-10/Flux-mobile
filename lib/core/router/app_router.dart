@@ -9,6 +9,7 @@ import 'package:flux/features/Auth/Screen/otp_verification.dart';
 import 'package:flux/features/Auth/Screen/reset_password.dart';
 import 'package:flux/features/Auth/Screen/splashscreen.dart';
 import 'package:flux/features/home/screens/home.dart';
+import 'package:flux/features/profile/screen/profile_create_screen.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -48,6 +49,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => ResetPasswordPage(email: email, otp: otp),
         );
+        
+      case Routes.profileCreate:
+        return MaterialPageRoute(builder: (_) => const ProfileCreateScreen());
       
       default:
         return MaterialPageRoute(

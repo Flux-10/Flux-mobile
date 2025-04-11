@@ -11,13 +11,23 @@ class AuthRepository {
 
   Future<ApiResponse<AuthResponse>> signUp({
     required String email,
-    required String displayName,
+    required String username,
     required String password,
   }) async {
-    log('Repository: Sign up request for email: $email');
+    log('Repository: Sign up request for email: $email, username: $username');
+    
+    // Validate username
+    if (username.isEmpty) {
+      log('Repository: Sign up failed - Username cannot be empty');
+      return ApiResponse<AuthResponse>(
+        error: 'Username cannot be empty',
+        statusCode: 400,
+      );
+    }
+    
     final request = SignUpRequest(
       email: email,
-      displayName: displayName,
+      username: username,
       password: password,
     );
 

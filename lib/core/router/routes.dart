@@ -7,6 +7,7 @@ class Routes {
   static const String onboard = '/onboard';
   static const String otpVerification = '/otp-verification';
   static const String resetPassword = '/reset-password';
+  static const String profileCreate = '/profile-create';
 
   //Add routes here
 }

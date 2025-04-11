@@ -34,6 +34,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
   void initState() {
     super.initState();
     _startResendTimer();
+    log('OTP verification page initialized for email: ${widget.email}');
   }
 
   @override
@@ -73,6 +74,16 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
               otp: _otpController.text,
             ),
           );
+          
+      // REMOVED: Forced navigation for testing
+      // log('TEST MODE: Force navigating to home after OTP verification');
+      // Future.delayed(const Duration(milliseconds: 500), () {
+      //   Navigator.pushNamedAndRemoveUntil(
+      //     context,
+      //     Routes.home,
+      //     (route) => false,
+      //   );
+      // });
     }
   }
 
@@ -104,15 +115,21 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
         listener: (context, state) {
           log('OTP verification state: ${state.status}');
           if (state.status == AuthStatus.authenticated) {
-            log('Authentication successful, navigating to home');
+            // Should usually navigate to home if logged in during verification (e.g., 2FA)
+            log('Authentication successful (during verification), navigating to home');
             Navigator.pushNamedAndRemoveUntil(
               context,
               Routes.home,
               (route) => false,
             );
-          } else if (state.status == AuthStatus.unauthenticated) {
-            log('Email verified, navigating to login');
-            Navigator.pushNamed(context, Routes.login);
+          } else if (state.status == AuthStatus.unauthenticated && state.error == null) {
+            // Successfully verified email, but no token means it's likely part of sign up flow
+            log('Email verified successfully (no token), navigating to profile create');
+            Navigator.pushNamedAndRemoveUntil(
+              context, 
+              Routes.profileCreate, // Navigate to profile creation
+              (route) => false
+            );
           } else if (state.status == AuthStatus.error) {
             log('Error during OTP verification: ${state.error}');
             ScaffoldMessenger.of(context).showSnackBar(

@@ -1,6 +1,6 @@
 class ApiConfig {
   // Base URL for the API
-  static const String baseUrl = 'https://api.example.com'; // Mock URL for testing
+  static const String baseUrl = 'https://fluxx-api.onrender.com';  
 
   // Authentication endpoints
   static const String signUp = '/api/auth/signup';

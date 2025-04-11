@@ -48,23 +48,23 @@ class _SignUpPageState extends State<SignUpPage> {
   
   void _signUp() {
     if (_formKey.currentState!.validate()) {
-      log('Sending sign up request for email: ${_emailController.text}');
+      log('Sending sign up request for email: ${_emailController.text}, username: ${_nameController.text}');
       
       context.read<AuthBloc>().add(
         SignUpRequested(
-          email: _emailController.text,
-          displayName: _nameController.text,
+          email: _emailController.text.trim(),
+          username: _nameController.text.trim(),
           password: _passwordController.text,
         ),
       );
       
-      // For testing, navigate directly to OTP validation
-      log('TEST MODE: Directly navigating to OTP verification for email: ${_emailController.text}');
-      Navigator.pushNamed(
-        context,
-        Routes.otpVerification,
-        arguments: {'email': _emailController.text},
-      );
+      // REMOVED: Forced navigation for testing
+      // log('TEST MODE: Directly navigating to OTP verification for email: ${_emailController.text}');
+      // Navigator.pushNamed(
+      //   context,
+      //   Routes.otpVerification,
+      //   arguments: {'email': _emailController.text},
+      // );
     }
   }
   
@@ -213,6 +213,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                             validator: (value) {
                                               if (value == null || value.isEmpty) {
                                                 return 'Please enter your name';
+                                              }
+                                              // Ensure username is not just whitespace
+                                              if (value.trim().isEmpty) {
+                                                return 'Username cannot be empty';
                                               }
                                               return null;
                                             },

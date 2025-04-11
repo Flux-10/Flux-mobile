@@ -1,30 +1,33 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-// Simplified model classes that don't rely on code generation for testing
+part 'auth_models.g.dart';
+
+@JsonSerializable()
 class SignUpRequest {
   final String email;
-  final String displayName;
+  
+  @JsonKey(name: 'displayName')
+  final String username;
+  
   final String password;
 
   SignUpRequest({
     required this.email,
-    required this.displayName,
+    required this.username,
     required this.password,
-  });
+  }) {
+    // Validate username is not empty
+    if (username.isEmpty) {
+      throw ArgumentError('Username cannot be empty');
+    }
+  }
 
-  Map<String, dynamic> toJson() => {
-    'email': email,
-    'displayName': displayName,
-    'password': password,
-  };
-  
-  factory SignUpRequest.fromJson(Map<String, dynamic> json) => SignUpRequest(
-    email: json['email'] as String,
-    displayName: json['displayName'] as String,
-    password: json['password'] as String,
-  );
+  Map<String, dynamic> toJson() => _$SignUpRequestToJson(this);
+  factory SignUpRequest.fromJson(Map<String, dynamic> json) => _$SignUpRequestFromJson(json);
 }
 
+@JsonSerializable()
 class LoginRequest {
   final String email;
   final String password;
@@ -34,17 +37,11 @@ class LoginRequest {
     required this.password,
   });
 
-  Map<String, dynamic> toJson() => {
-    'email': email,
-    'password': password,
-  };
-  
-  factory LoginRequest.fromJson(Map<String, dynamic> json) => LoginRequest(
-    email: json['email'] as String,
-    password: json['password'] as String,
-  );
+  Map<String, dynamic> toJson() => _$LoginRequestToJson(this);
+  factory LoginRequest.fromJson(Map<String, dynamic> json) => _$LoginRequestFromJson(json);
 }
 
+@JsonSerializable()
 class VerifyEmailRequest {
   final String email;
   final String otp;
@@ -54,17 +51,11 @@ class VerifyEmailRequest {
     required this.otp,
   });
 
-  Map<String, dynamic> toJson() => {
-    'email': email,
-    'otp': otp,
-  };
-  
-  factory VerifyEmailRequest.fromJson(Map<String, dynamic> json) => VerifyEmailRequest(
-    email: json['email'] as String,
-    otp: json['otp'] as String,
-  );
+  Map<String, dynamic> toJson() => _$VerifyEmailRequestToJson(this);
+  factory VerifyEmailRequest.fromJson(Map<String, dynamic> json) => _$VerifyEmailRequestFromJson(json);
 }
 
+@JsonSerializable()
 class ForgotPasswordRequest {
   final String email;
 
@@ -72,15 +63,11 @@ class ForgotPasswordRequest {
     required this.email,
   });
 
-  Map<String, dynamic> toJson() => {
-    'email': email,
-  };
-  
-  factory ForgotPasswordRequest.fromJson(Map<String, dynamic> json) => ForgotPasswordRequest(
-    email: json['email'] as String,
-  );
+  Map<String, dynamic> toJson() => _$ForgotPasswordRequestToJson(this);
+  factory ForgotPasswordRequest.fromJson(Map<String, dynamic> json) => _$ForgotPasswordRequestFromJson(json);
 }
 
+@JsonSerializable()
 class ResetPasswordRequest {
   final String email;
   final String otp;
@@ -92,19 +79,11 @@ class ResetPasswordRequest {
     required this.newPassword,
   });
 
-  Map<String, dynamic> toJson() => {
-    'email': email,
-    'otp': otp,
-    'newPassword': newPassword,
-  };
-  
-  factory ResetPasswordRequest.fromJson(Map<String, dynamic> json) => ResetPasswordRequest(
-    email: json['email'] as String,
-    otp: json['otp'] as String,
-    newPassword: json['newPassword'] as String,
-  );
+  Map<String, dynamic> toJson() => _$ResetPasswordRequestToJson(this);
+  factory ResetPasswordRequest.fromJson(Map<String, dynamic> json) => _$ResetPasswordRequestFromJson(json);
 }
 
+@JsonSerializable()
 class ResendVerificationRequest {
   final String email;
 
@@ -112,15 +91,11 @@ class ResendVerificationRequest {
     required this.email,
   });
 
-  Map<String, dynamic> toJson() => {
-    'email': email,
-  };
-  
-  factory ResendVerificationRequest.fromJson(Map<String, dynamic> json) => ResendVerificationRequest(
-    email: json['email'] as String,
-  );
+  Map<String, dynamic> toJson() => _$ResendVerificationRequestToJson(this);
+  factory ResendVerificationRequest.fromJson(Map<String, dynamic> json) => _$ResendVerificationRequestFromJson(json);
 }
 
+@JsonSerializable()
 class AuthResponse {
   final String? token;
   final String? message;
@@ -132,17 +107,8 @@ class AuthResponse {
     required this.success,
   });
 
-  factory AuthResponse.fromJson(Map<String, dynamic> json) => AuthResponse(
-    token: json['token'] as String?,
-    message: json['message'] as String?,
-    success: json['success'] as bool? ?? false,
-  );
-  
-  Map<String, dynamic> toJson() => {
-    'token': token,
-    'message': message,
-    'success': success,
-  };
+  factory AuthResponse.fromJson(Map<String, dynamic> json) => _$AuthResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$AuthResponseToJson(this);
 }
 
 class User extends Equatable {

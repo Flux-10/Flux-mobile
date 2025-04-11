@@ -24,12 +24,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthState.loading());
-    log('SignUp requested for email: ${event.email}');
+    log('SignUp requested for email: ${event.email}, username: ${event.username}');
+
+    // Validate username isn't empty
+    if (event.username.isEmpty) {
+      log('SignUp failed: Username cannot be empty');
+      emit(AuthState.error('Username cannot be empty'));
+      return;
+    }
 
     try {
       final response = await _authRepository.signUp(
         email: event.email,
-        displayName: event.displayName,
+        username: event.username,
         password: event.password,
       );
 
@@ -65,11 +72,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       log('Login response: status=${response.statusCode}, error=${response.error}, success=${response.isSuccess}');
 
       if (response.isSuccess && response.data != null && response.data!.token != null) {
-        // In a real app, we would parse the user from the response
-        // For now, we'll create a basic user with the email
+        // Assuming the API response includes user details upon login success
+        // Let's simulate getting username from the token or a separate user object if available
+        // For now, derive from email if not provided.
+        final username = response.data!.message?.split(' ').last ?? event.email.split('@').first;
         final user = User(
           email: event.email,
-          displayName: event.email.split('@').first,
+          displayName: username,
         );
         log('Login successful for user: ${user.email}');
         emit(AuthState.authenticated(user, response.data!.token!));
@@ -102,16 +111,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (response.isSuccess && response.data != null) {
         if (response.data!.token != null) {
           // If token is provided after verification, auto-login the user
+          final username = response.data!.message?.split(' ').last ?? event.email.split('@').first;
           final user = User(
             email: event.email,
-            displayName: event.email.split('@').first,
+            displayName: username,
           );
           log('Email verification successful with token, user authenticated: ${user.email}');
           emit(AuthState.authenticated(user, response.data!.token!));
         } else {
           // If no token, then just consider verification successful
           log('Email verification successful, no token provided');
-          emit(AuthState.unauthenticated());
+          // Keep the email for the profile creation step
+          emit(AuthState.unauthenticated().copyWith(email: event.email, status: AuthStatus.verificationRequired));
         }
       } else {
         final errorMsg = response.error ?? 'Email verification failed';
