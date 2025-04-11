@@ -1,5 +1,4 @@
- 
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flux/core/router/routes.dart';
 import 'package:flux/features/Auth/Screen/SignIn.dart';
@@ -13,51 +12,52 @@ import 'package:flux/features/home/screens/home.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    log('Navigating to route: ${settings.name} with arguments: ${settings.arguments}');
+    
     switch (settings.name) {
-
-      //!AUTHENTICATION ROUTES
-      //Splash Screen
       case Routes.splash:
-      return  MaterialPageRoute(builder: (_) => const SplashScreen());
-      //onboard Screen
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
+      
       case Routes.onboard:
-      return  MaterialPageRoute(builder: (_) => const OnboardingScreen());
-
-      //SignUpPage
-      case Routes.signup:
-      return MaterialPageRoute(builder: (_) => const SignUpPage());
-
-      //sign in
+        return MaterialPageRoute(builder: (_) => const OnboardingScreen());
+      
       case Routes.login:
-      return MaterialPageRoute(builder: (_) => const SignInPage());
-
-      //Forgot Password
+        return MaterialPageRoute(builder: (_) => const SignInPage());
+      
+      case Routes.signup:
+        return MaterialPageRoute(builder: (_) => const SignUpPage());
+      
+      case Routes.home:
+        return MaterialPageRoute(builder: (_) => const HomeScreen());
+      
       case Routes.forgotPassword:
-      return MaterialPageRoute(builder: (_) => const ForgotPasswordPage());
-
+        return MaterialPageRoute(builder: (_) => const ForgotPasswordPage());
+      
       case Routes.otpVerification:
-        return MaterialPageRoute(builder: (_) => const OTPVerificationPage());
+        final args = settings.arguments as Map<String, dynamic>?;
+        final email = args?['email'] as String? ?? '';
+        log('OTP Verification route with email: $email');
+        return MaterialPageRoute(
+          builder: (_) => OTPVerificationPage(email: email),
+        );
       
       case Routes.resetPassword:
-        return MaterialPageRoute(builder: (_) => const ResetPasswordPage());
-
-        //! AUTHERNTICATION ROUTES END
-
-        //!Home route
-        case Routes.home:
-          return MaterialPageRoute(builder: (_) => const HomeScreen());
-
-    //Home Screen
-    
+        final args = settings.arguments as Map<String, dynamic>?;
+        final email = args?['email'] as String? ?? '';
+        final otp = args?['otp'] as String? ?? '';
+        return MaterialPageRoute(
+          builder: (_) => ResetPasswordPage(email: email, otp: otp),
+        );
+      
       default:
-      return MaterialPageRoute(builder: (_) => Scaffold(
-        body: Center(
-          child: Text('Unknown route: ${settings.name}'),
-        ),
-
-      ));
+        return MaterialPageRoute(
+          builder: (_) => Scaffold(
+            body: Center(
+              child: Text('No route defined for ${settings.name}'),
+            ),
+          ),
+        );
     }
-
   }
 }
 

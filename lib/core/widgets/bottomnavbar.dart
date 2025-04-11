@@ -12,10 +12,10 @@ class CustomBottomNav extends StatefulWidget {
 class _CustomBottomNavState extends State<CustomBottomNav> {
   @override
   Widget build(BuildContext context) {
-    return    Scaffold(
+    return Scaffold(
       bottomNavigationBar: Container(
       
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
              color: AppConstants.primarybg,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
