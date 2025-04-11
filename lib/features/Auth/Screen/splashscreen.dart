@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'AI-Powered Dating',
+              'One account to rule them all',
               style: GoogleFonts.manrope(
                 color: AppConstants.labelText,
                 fontSize: 18.0,

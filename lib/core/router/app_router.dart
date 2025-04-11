@@ -1,12 +1,15 @@
+ 
+
 import 'package:flutter/material.dart';
-import 'package:flux/Auth/Screen/SignIn.dart';
-import 'package:flux/Auth/Screen/SignUp.dart';
-import 'package:flux/Auth/Screen/forgotpassword.dart';
-import 'package:flux/Auth/Screen/onboard.dart';
-import 'package:flux/Auth/Screen/splashscreen.dart';
 import 'package:flux/core/router/routes.dart';
-import 'package:flux/Auth/Screen/otp_verification.dart';
-import 'package:flux/Auth/Screen/reset_password.dart';
+import 'package:flux/features/Auth/Screen/SignIn.dart';
+import 'package:flux/features/Auth/Screen/SignUp.dart';
+import 'package:flux/features/Auth/Screen/forgotpassword.dart';
+import 'package:flux/features/Auth/Screen/onboard.dart';
+import 'package:flux/features/Auth/Screen/otp_verification.dart';
+import 'package:flux/features/Auth/Screen/reset_password.dart';
+import 'package:flux/features/Auth/Screen/splashscreen.dart';
+import 'package:flux/features/home/screens/home.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -39,6 +42,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ResetPasswordPage());
 
         //! AUTHERNTICATION ROUTES END
+
+        //!Home route
+        case Routes.home:
+          return MaterialPageRoute(builder: (_) => const HomeScreen());
 
     //Home Screen
     

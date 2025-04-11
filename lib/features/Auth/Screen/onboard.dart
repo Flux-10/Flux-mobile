@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flux/Auth/Screen/widgets/custombutton.dart';
 import 'package:flux/core/util/constants.dart';
 import 'package:flux/core/router/routes.dart';
+import 'package:flux/features/Auth/Screen/widgets/custombutton.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -18,19 +18,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<OnboardingContent> _contents = [
     OnboardingContent(
-      title: 'Smart Matching',
-      description: 'Our AI understands your preferences and matches you with compatible partners',
-      image: 'assets/images/onboard1.png',
+      title: 'Meet Your Classmates',
+      description: 'Connect with students in your classes, clubs, or dorms to build your campus network',
+      image: 'assets/images/onboard_campus1.png',
     ),
     OnboardingContent(
-      title: 'Meaningful Connections',
-      description: 'Build authentic relationships based on shared interests and values',
-      image: 'assets/images/onboard2.png',
+      title: 'Stay in the Loop',
+      description: 'Discover campus events, study groups, and parties happening around you',
+      image: 'assets/images/onboard_campus2.png',
     ),
     OnboardingContent(
-      title: 'Safe & Secure',
-      description: 'Advanced AI verification ensures you meet real people with genuine intentions',
-      image: 'assets/images/onboard3.png',
+      title: 'Share Your Campus Vibe',
+      description: 'Post about your uni life, from lecture moments to late-night study sessions',
+      image: 'assets/images/onboard_campus3.png',
     ),
   ];
 
@@ -99,7 +99,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   SmoothPageIndicator(
                     controller: _pageController,
                     count: _contents.length,
-                    effect: ExpandingDotsEffect(
+                    effect: const ExpandingDotsEffect(
                       dotColor: AppConstants.primarybg,
                       activeDotColor: AppConstants.outlinebg,
                       dotHeight: 8,
