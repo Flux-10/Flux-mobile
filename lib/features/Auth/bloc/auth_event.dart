@@ -9,6 +9,7 @@ abstract class AuthEvent extends Equatable {
 
 class SignUpRequested extends AuthEvent {
   final String email;
+  // Username is stored for future use but not sent to backend during registration
   final String username;
   final String password;
 

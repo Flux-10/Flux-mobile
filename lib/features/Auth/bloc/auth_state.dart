@@ -16,6 +16,7 @@ class AuthState extends Equatable {
   final String? token;
   final String? error;
   final String? email;
+  final String? username;
 
   const AuthState({
     this.status = AuthStatus.initial,
@@ -23,6 +24,7 @@ class AuthState extends Equatable {
     this.token,
     this.error,
     this.email,
+    this.username,
   });
 
   AuthState copyWith({
@@ -31,6 +33,7 @@ class AuthState extends Equatable {
     String? token,
     String? error,
     String? email,
+    String? username,
   }) {
     return AuthState(
       status: status ?? this.status,
@@ -38,11 +41,12 @@ class AuthState extends Equatable {
       token: token ?? this.token,
       error: error ?? this.error,
       email: email ?? this.email,
+      username: username ?? this.username,
     );
   }
 
   @override
-  List<Object?> get props => [status, user, token, error, email];
+  List<Object?> get props => [status, user, token, error, email, username];
 
   // Factory methods for common states
   factory AuthState.initial() => const AuthState(status: AuthStatus.initial);
@@ -60,9 +64,10 @@ class AuthState extends Equatable {
         error: error,
       );
 
-  factory AuthState.verificationRequired(String email) => AuthState(
+  factory AuthState.verificationRequired(String email, [String? username]) => AuthState(
         status: AuthStatus.verificationRequired,
         email: email,
+        username: username,
       );
 
   factory AuthState.error(String error) => AuthState(

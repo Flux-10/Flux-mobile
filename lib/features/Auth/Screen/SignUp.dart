@@ -203,23 +203,39 @@ class _SignUpPageState extends State<SignUpPage> {
                                             0.0, 0.0, 0.0, 16.0),
                                         child: SizedBox(
                                           width: double.infinity,
-                                          child: CustomTextFormField(
-                                            controller: _nameController,
-                                            focusNode: _nameFocus,
-                                            labelText: 'Name',
-                                            keyboardType: TextInputType.name,
-                                            autofillHints: const [AutofillHints.name],
-                                            autofocus: true,
-                                            validator: (value) {
-                                              if (value == null || value.isEmpty) {
-                                                return 'Please enter your name';
-                                              }
-                                              // Ensure username is not just whitespace
-                                              if (value.trim().isEmpty) {
-                                                return 'Username cannot be empty';
-                                              }
-                                              return null;
-                                            },
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              CustomTextFormField(
+                                                controller: _nameController,
+                                                focusNode: _nameFocus,
+                                                labelText: 'Name', // This is only stored locally, not sent to backend
+                                                keyboardType: TextInputType.name,
+                                                autofillHints: const [AutofillHints.name],
+                                                autofocus: true,
+                                                validator: (value) {
+                                                  if (value == null || value.isEmpty) {
+                                                    return 'Please enter your name';
+                                                  }
+                                                  // Ensure username is not just whitespace
+                                                  if (value.trim().isEmpty) {
+                                                    return 'Username cannot be empty';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 4, left: 8),
+                                                child: Text(
+                                                  'Your name will be used to personalize your profile after verification',
+                                                  style: GoogleFonts.manrope(
+                                                    color: AppConstants.labelText,
+                                                    fontSize: 12.0,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),

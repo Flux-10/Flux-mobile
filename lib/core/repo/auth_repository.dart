@@ -11,29 +11,21 @@ class AuthRepository {
 
   Future<ApiResponse<AuthResponse>> signUp({
     required String email,
-    required String username,
     required String password,
   }) async {
-    log('Repository: Sign up request for email: $email, username: $username');
-    
-    // Validate username
-    if (username.isEmpty) {
-      log('Repository: Sign up failed - Username cannot be empty');
-      return ApiResponse<AuthResponse>(
-        error: 'Username cannot be empty',
-        statusCode: 400,
-      );
-    }
+    log('Repository: Sign up request for email: $email');
     
     final request = SignUpRequest(
       email: email,
-      username: username,
       password: password,
     );
 
+    final requestJson = request.toJson();
+    log('Repository: Sign up request payload to backend: $requestJson');
+
     final response = await _apiClient.post<AuthResponse>(
       endpoint: ApiConfig.signUp,
-      body: request.toJson(),
+      body: requestJson,
       fromJson: (json) => AuthResponse.fromJson(json),
     );
     

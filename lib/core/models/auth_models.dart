@@ -6,22 +6,13 @@ part 'auth_models.g.dart';
 @JsonSerializable()
 class SignUpRequest {
   final String email;
-  
-  @JsonKey(name: 'displayName')
-  final String username;
-  
   final String password;
-
+  
+  // Username is no longer part of the model as it's not expected by backend
   SignUpRequest({
     required this.email,
-    required this.username,
     required this.password,
-  }) {
-    // Validate username is not empty
-    if (username.isEmpty) {
-      throw ArgumentError('Username cannot be empty');
-    }
-  }
+  });
 
   Map<String, dynamic> toJson() => _$SignUpRequestToJson(this);
   factory SignUpRequest.fromJson(Map<String, dynamic> json) => _$SignUpRequestFromJson(json);

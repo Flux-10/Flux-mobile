@@ -26,7 +26,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthState.loading());
     log('SignUp requested for email: ${event.email}, username: ${event.username}');
 
-    // Validate username isn't empty
+    // Validate username isn't empty (for profile creation later)
     if (event.username.isEmpty) {
       log('SignUp failed: Username cannot be empty');
       emit(AuthState.error('Username cannot be empty'));
@@ -34,9 +34,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
 
     try {
+      // Backend only expects email and password
       final response = await _authRepository.signUp(
         email: event.email,
-        username: event.username,
         password: event.password,
       );
 
@@ -44,7 +44,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (response.isSuccess && response.data != null) {
         log('SignUp successful, verification required for email: ${event.email}');
-        emit(AuthState.verificationRequired(event.email));
+        // Store the username to be used after verification
+        emit(AuthState.verificationRequired(event.email, event.username));
       } else {
         final errorMsg = response.error ?? 'Sign up failed';
         log('SignUp failed: $errorMsg');
@@ -111,7 +112,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (response.isSuccess && response.data != null) {
         if (response.data!.token != null) {
           // If token is provided after verification, auto-login the user
-          final username = response.data!.message?.split(' ').last ?? event.email.split('@').first;
+          // Use username from state if available, otherwise derive from email or response
+          final username = state.username ?? 
+                          response.data!.message?.split(' ').last ?? 
+                          event.email.split('@').first;
+          
           final user = User(
             email: event.email,
             displayName: username,
@@ -121,8 +126,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         } else {
           // If no token, then just consider verification successful
           log('Email verification successful, no token provided');
-          // Keep the email for the profile creation step
-          emit(AuthState.unauthenticated().copyWith(email: event.email, status: AuthStatus.verificationRequired));
+          // Keep the email and username for the profile creation step
+          emit(AuthState.unauthenticated().copyWith(
+            email: event.email, 
+            username: state.username,
+            status: AuthStatus.verificationRequired
+          ));
         }
       } else {
         final errorMsg = response.error ?? 'Email verification failed';
@@ -212,7 +221,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (response.isSuccess && response.data != null) {
         log('Verification code resent successfully for email: ${event.email}');
-        emit(AuthState.verificationRequired(event.email));
+        // Preserve username from current state if available
+        emit(AuthState.verificationRequired(event.email, state.username));
       } else {
         final errorMsg = response.error ?? 'Resend verification failed';
         log('Resend verification failed: $errorMsg');
