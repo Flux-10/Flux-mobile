@@ -189,6 +189,11 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                         controller: _otpController,
                         cursorColor: AppConstants.primary,
                         keyboardType: TextInputType.number,
+                        textStyle: GoogleFonts.manrope(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600,
+                        ),
                         pinTheme: PinTheme(
                           shape: PinCodeFieldShape.box,
                           borderRadius: BorderRadius.circular(12),
