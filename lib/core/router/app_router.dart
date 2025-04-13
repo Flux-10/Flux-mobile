@@ -8,6 +8,7 @@ import 'package:flux/features/Auth/Screen/onboard.dart';
 import 'package:flux/features/Auth/Screen/otp_verification.dart';
 import 'package:flux/features/Auth/Screen/reset_password.dart';
 import 'package:flux/features/Auth/Screen/splashscreen.dart';
+import 'package:flux/features/Auth/Screen/verification_success.dart';
 import 'package:flux/features/home/screens/home.dart';
 import 'package:flux/features/profile/screen/profile_create_screen.dart';
 
@@ -38,6 +39,9 @@ class AppRouter {
         final args = settings.arguments as Map<String, dynamic>?;
         final email = args?['email'] as String? ?? '';
         log('OTP Verification route with email: $email');
+        if (email.isEmpty) {
+          log('WARNING: Empty email passed to OTP verification page');
+        }
         return MaterialPageRoute(
           builder: (_) => OTPVerificationPage(email: email),
         );
@@ -51,7 +55,25 @@ class AppRouter {
         );
         
       case Routes.profileCreate:
-        return MaterialPageRoute(builder: (_) => const ProfileCreateScreen());
+        final args = settings.arguments as Map<String, dynamic>?;
+        final email = args?['email'] as String?;
+        log('ProfileCreate route with email: $email');
+        return MaterialPageRoute(
+          builder: (_) => ProfileCreateScreen(),
+          settings: RouteSettings(
+            arguments: {'email': email},
+          ),
+        );
+      
+      case Routes.verificationSuccess:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final email = args?['email'] as String? ?? '';
+        log('VerificationSuccess route with email: $email');
+        return MaterialPageRoute(
+          builder: (_) => VerificationSuccessScreen(
+            email: email,
+          ),
+        );
       
       default:
         return MaterialPageRoute(

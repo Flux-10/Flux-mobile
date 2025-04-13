@@ -8,6 +8,7 @@ class Routes {
   static const String otpVerification = '/otp-verification';
   static const String resetPassword = '/reset-password';
   static const String profileCreate = '/profile-create';
+  static const String verificationSuccess = '/verification-success';
 
   //Add routes here
 }

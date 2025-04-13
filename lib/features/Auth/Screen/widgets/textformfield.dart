@@ -13,6 +13,7 @@ class CustomTextFormField extends StatefulWidget {
   final String? Function(String?)? validator;
   final bool autofocus;
   final bool isPassword;
+  final int? maxLines;
 
   const CustomTextFormField({
     super.key,
@@ -25,6 +26,7 @@ class CustomTextFormField extends StatefulWidget {
     this.validator,
     this.autofocus = false,
     this.isPassword = false,
+    this.maxLines = 1,
   });
 
   @override
@@ -139,6 +141,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             _handleError(error);
             return error;
           },
+          maxLines: widget.maxLines,
         ),
       ),
     );

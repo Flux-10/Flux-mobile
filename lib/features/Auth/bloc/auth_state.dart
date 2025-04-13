@@ -64,10 +64,9 @@ class AuthState extends Equatable {
         error: error,
       );
 
-  factory AuthState.verificationRequired(String email, [String? username]) => AuthState(
+  factory AuthState.verificationRequired(String email) => AuthState(
         status: AuthStatus.verificationRequired,
         email: email,
-        username: username,
       );
 
   factory AuthState.error(String error) => AuthState(

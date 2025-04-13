@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flux/core/util/constants.dart';
 import 'package:flux/core/router/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _navigateToNext() async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 5000));
     if (mounted) {
       Navigator.pushReplacementNamed(context, Routes.onboard);
     }
@@ -51,6 +52,14 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
+               const SizedBox(height: 90),
+              const Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: SpinKitFadingCube(
+                color: Colors.white,
+                size: 50.0,
+              ),
+              )
           ],
         ),
       ),

@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
               scaffoldBackgroundColor: const Color(0xFFF5F5F5), // Off-white color
             ),
             onGenerateRoute: AppRouter.generateRoute,
-            initialRoute: Routes.signup,
+            initialRoute: Routes.splash,
           );
         },
       ),

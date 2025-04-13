@@ -23,11 +23,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
-  final FocusNode _nameFocus = FocusNode();
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _confirmPasswordFocus = FocusNode();
@@ -35,11 +33,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _nameFocus.dispose();
     _emailFocus.dispose();
     _passwordFocus.dispose();
     _confirmPasswordFocus.dispose();
@@ -48,23 +44,25 @@ class _SignUpPageState extends State<SignUpPage> {
   
   void _signUp() {
     if (_formKey.currentState!.validate()) {
-      log('Sending sign up request for email: ${_emailController.text}, username: ${_nameController.text}');
+      log('Sending sign up request for email: ${_emailController.text}');
       
-      context.read<AuthBloc>().add(
-        SignUpRequested(
-          email: _emailController.text.trim(),
-          username: _nameController.text.trim(),
-          password: _passwordController.text,
-        ),
-      );
-      
-      // REMOVED: Forced navigation for testing
-      // log('TEST MODE: Directly navigating to OTP verification for email: ${_emailController.text}');
-      // Navigator.pushNamed(
-      //   context,
-      //   Routes.otpVerification,
-      //   arguments: {'email': _emailController.text},
-      // );
+      try {
+        context.read<AuthBloc>().add(
+          SignUpRequested(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          ),
+        );
+        log('SignUpRequested event dispatched successfully');
+      } catch (e) {
+        log('Error dispatching SignUpRequested event: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
   
@@ -77,10 +75,12 @@ class _SignUpPageState extends State<SignUpPage> {
           if (state.status == AuthStatus.verificationRequired) {
             // Navigate to OTP verification screen with email
             log('Navigating to OTP verification for email: ${_emailController.text}');
+            log('State email: ${state.email}, State username: ${state.username}');
+            
             Navigator.pushNamed(
               context,
               Routes.otpVerification,
-              arguments: {'email': _emailController.text},
+              arguments: {'email': state.email ?? _emailController.text},
             );
           } else if (state.status == AuthStatus.error) {
             log('Error during sign up: ${state.error}');
@@ -187,7 +187,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           0.0, 12.0, 0.0, 24.0
                                         ),
                                         child: Text(
-                                          'Let\'s get started by filling out the form below.',
+                                          'Get started by registering with your email, you can set up your profile after verification.',
                                           style: GoogleFonts.manrope(
                                             color: AppConstants.labelText,
                                             fontSize: 16.0,
@@ -198,48 +198,6 @@ class _SignUpPageState extends State<SignUpPage> {
                                       ),
 
                                       //! Textfields
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 0.0, 16.0),
-                                        child: SizedBox(
-                                          width: double.infinity,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              CustomTextFormField(
-                                                controller: _nameController,
-                                                focusNode: _nameFocus,
-                                                labelText: 'Name', // This is only stored locally, not sent to backend
-                                                keyboardType: TextInputType.name,
-                                                autofillHints: const [AutofillHints.name],
-                                                autofocus: true,
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'Please enter your name';
-                                                  }
-                                                  // Ensure username is not just whitespace
-                                                  if (value.trim().isEmpty) {
-                                                    return 'Username cannot be empty';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(top: 4, left: 8),
-                                                child: Text(
-                                                  'Your name will be used to personalize your profile after verification',
-                                                  style: GoogleFonts.manrope(
-                                                    color: AppConstants.labelText,
-                                                    fontSize: 12.0,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-
                                       Padding(
                                         padding: const EdgeInsetsDirectional.fromSTEB(
                                             0.0, 0.0, 0.0, 16.0),

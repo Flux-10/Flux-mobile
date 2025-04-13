@@ -14,10 +14,13 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 class OTPVerificationPage extends StatefulWidget {
   final String email;
 
-  const OTPVerificationPage({
+  // Non-const constructor with logging
+  OTPVerificationPage({
     Key? key,
     required this.email,
-  }) : super(key: key);
+  }) : super(key: key) {
+    log('OTPVerificationPage created with email: $email');
+  }
 
   @override
   State<OTPVerificationPage> createState() => _OTPVerificationPageState();
@@ -124,11 +127,14 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             );
           } else if (state.status == AuthStatus.unauthenticated && state.error == null) {
             // Successfully verified email, but no token means it's likely part of sign up flow
-            log('Email verified successfully (no token), navigating to profile create');
+            log('Email verified successfully (no token), navigating to verification success screen');
             Navigator.pushNamedAndRemoveUntil(
               context, 
-              Routes.profileCreate, // Navigate to profile creation
-              (route) => false
+              Routes.verificationSuccess, // Navigate to verification success screen
+              (route) => false,
+              arguments: {
+                'email': widget.email,
+              },
             );
           } else if (state.status == AuthStatus.error) {
             log('Error during OTP verification: ${state.error}');
