@@ -75,7 +75,7 @@ class _SignUpPageState extends State<SignUpPage> {
           if (state.status == AuthStatus.verificationRequired) {
             // Navigate to OTP verification screen with email
             log('Navigating to OTP verification for email: ${_emailController.text}');
-            log('State email: ${state.email}, State username: ${state.username}');
+            log('State email: ${state.email}');
             
             Navigator.pushNamed(
               context,
@@ -302,6 +302,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
+                                                
                                               TextSpan(
                                                 text: 'Sign In',
                                                 style: GoogleFonts.manrope(

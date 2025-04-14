@@ -84,7 +84,7 @@ Map<String, dynamic> _$ResendVerificationRequestToJson(
 AuthResponse _$AuthResponseFromJson(Map<String, dynamic> json) => AuthResponse(
       token: json['token'] as String?,
       message: json['message'] as String?,
-      success: json['success'] as bool,
+      success: json['success'] as bool?,
     );
 
 Map<String, dynamic> _$AuthResponseToJson(AuthResponse instance) =>

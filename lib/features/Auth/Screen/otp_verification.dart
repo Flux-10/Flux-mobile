@@ -126,15 +126,12 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
               (route) => false,
             );
           } else if (state.status == AuthStatus.unauthenticated && state.error == null) {
-            // Successfully verified email, but no token means it's likely part of sign up flow
-            log('Email verified successfully (no token), navigating to verification success screen');
+            // Successfully verified email, immediately go to home screen
+            log('Email verified successfully, navigating to home screen');
             Navigator.pushNamedAndRemoveUntil(
               context, 
-              Routes.verificationSuccess, // Navigate to verification success screen
+              Routes.home,
               (route) => false,
-              arguments: {
-                'email': widget.email,
-              },
             );
           } else if (state.status == AuthStatus.error) {
             log('Error during OTP verification: ${state.error}');

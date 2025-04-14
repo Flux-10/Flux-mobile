@@ -59,7 +59,7 @@ class AppRouter {
         final email = args?['email'] as String?;
         log('ProfileCreate route with email: $email');
         return MaterialPageRoute(
-          builder: (_) => ProfileCreateScreen(),
+          builder: (_) => const ProfileCreateScreen(),
           settings: RouteSettings(
             arguments: {'email': email},
           ),

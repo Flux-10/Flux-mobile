@@ -1,7 +1,9 @@
 import 'dart:developer';
+import 'dart:math' show min;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flux/core/util/constants.dart';
 import 'package:flux/core/router/routes.dart';
 import 'package:flux/features/Auth/Screen/widgets/custombutton.dart';
@@ -41,6 +43,8 @@ class _SignInPageState extends State<SignInPage> {
     if (_formKey.currentState!.validate()) {
       log('Attempting login for email: ${_emailController.text}');
       
+      log('About to dispatch LoginRequested event to AuthBloc');
+      
       context.read<AuthBloc>().add(
         LoginRequested(
           email: _emailController.text,
@@ -48,15 +52,7 @@ class _SignInPageState extends State<SignInPage> {
         ),
       );
       
-      // REMOVED: Forced navigation for testing
-      // log('TEST MODE: Force navigating to home after login');
-      // Future.delayed(const Duration(milliseconds: 500), () {
-      //   Navigator.pushNamedAndRemoveUntil(
-      //     context,
-      //     Routes.home,
-      //     (route) => false,
-      //   );
-      // });
+      log('LoginRequested event dispatched');
     }
   }
 
@@ -66,15 +62,22 @@ class _SignInPageState extends State<SignInPage> {
       backgroundColor: AppConstants.bg,
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          log('Login state changed: ${state.status}');
+          log('Login state changed: ${state.status}, Error: ${state.error}, Has token: ${state.token != null}');
           
           if (state.status == AuthStatus.authenticated) {
-            log('User authenticated, navigating to home');
-            Navigator.pushNamedAndRemoveUntil(
-              context, 
-              Routes.home,
-              (route) => false,
-            );
+            log('✅ User authenticated, navigating to home, token: ${state.token?.substring(0, min(10, state.token?.length ?? 0))}...');
+            
+            // Try immediate navigation
+            log('Executing immediate navigation to home screen');
+            
+            // Try a different navigation approach
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              log('Navigating in post frame callback');
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                Routes.home,
+                (route) => false,
+              );
+            });
           } else if (state.status == AuthStatus.error) {
             log('Login error: ${state.error}');
             ScaffoldMessenger.of(context).showSnackBar(
@@ -90,6 +93,8 @@ class _SignInPageState extends State<SignInPage> {
               Routes.otpVerification,
               arguments: {'email': state.email},
             );
+          } else {
+            log('Other auth state: ${state.status}');
           }
         },
         builder: (context, state) {
@@ -251,8 +256,9 @@ class _SignInPageState extends State<SignInPage> {
                                             0.0, 8.0, 0.0, 24.0),
                                         child: state.status == AuthStatus.loading
                                             ? const Center(
-                                                child: CircularProgressIndicator(
-                                                  color: AppConstants.primary,
+                                                child: SpinKitFadingCube(
+                                                  color: Colors.white,
+                                                  size: 20.0,
                                                 ),
                                               )
                                             : CustomElevatedButton(
@@ -260,7 +266,31 @@ class _SignInPageState extends State<SignInPage> {
                                                 onPressed: _signIn,
                                               ),
                                       ),
-                                    
+                                      
+                                      // Test button for direct navigation
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 0.0, 0.0, 16.0),
+                                        child: TextButton(
+                                          onPressed: () {
+                                            log('Direct navigation test to home screen');
+                                            Navigator.pushNamedAndRemoveUntil(
+                                              context, 
+                                              Routes.home,
+                                              (route) => false,
+                                            );
+                                          },
+                                          child: Text(
+                                            'Test Navigation to Home',
+                                            style: GoogleFonts.manrope(
+                                              color: Colors.amber,
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      
                                       Padding(
                                         padding: const EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 12.0),
                                         child: RichText(

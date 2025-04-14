@@ -90,12 +90,12 @@ class ResendVerificationRequest {
 class AuthResponse {
   final String? token;
   final String? message;
-  final bool success;
+  final bool? success;
 
   AuthResponse({
     this.token,
     this.message,
-    required this.success,
+    this.success,
   });
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) => _$AuthResponseFromJson(json);

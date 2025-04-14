@@ -23,22 +23,19 @@ class _VerificationSuccessScreenState extends State<VerificationSuccessScreen> {
   void initState() {
     super.initState();
     log('VerificationSuccessScreen initialized for email: ${widget.email}');
-    // Auto-navigate to profile creation after 3 seconds
+    // Auto-navigate to home screen after 3 seconds
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        navigateToProfileCreation();
+        navigateToHome();
       }
     });
   }
 
-  void navigateToProfileCreation() {
-    log('Navigating to profile creation screen');
+  void navigateToHome() {
+    log('Navigating to home screen');
     Navigator.pushReplacementNamed(
       context, 
-      Routes.profileCreate,
-      arguments: {
-        'email': widget.email,
-      }
+      Routes.home,
     );
   }
 
@@ -79,7 +76,7 @@ class _VerificationSuccessScreenState extends State<VerificationSuccessScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Your email has been verified successfully. Now let\'s set up your profile.',
+                  'Your email has been verified successfully. You will now be redirected to the home screen.',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.manrope(
                     color: AppConstants.labelText,
@@ -89,8 +86,8 @@ class _VerificationSuccessScreenState extends State<VerificationSuccessScreen> {
                 ),
                 const SizedBox(height: 32),
                 CustomElevatedButton(
-                  text: 'Continue to Profile Setup',
-                  onPressed: navigateToProfileCreation,
+                  text: 'Go to Home',
+                  onPressed: navigateToHome,
                 ),
               ],
             ),
