@@ -11,6 +11,8 @@ import 'package:flux/features/Auth/Screen/splashscreen.dart';
 import 'package:flux/features/Auth/Screen/verification_success.dart';
 import 'package:flux/features/home/screens/home.dart';
 import 'package:flux/features/profile/screen/profile_create_screen.dart';
+import 'package:flux/features/profile/screen/profile_screen.dart';
+import 'package:flux/features/settings/screens/settings.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -64,6 +66,12 @@ class AppRouter {
             arguments: {'email': email},
           ),
         );
+        
+      case Routes.profile:
+        return MaterialPageRoute(builder: (_) => const ProfileScreen());
+      
+      case Routes.settings:
+        return MaterialPageRoute(builder: (_) => const SettingsScreen());
       
       case Routes.verificationSuccess:
         final args = settings.arguments as Map<String, dynamic>?;

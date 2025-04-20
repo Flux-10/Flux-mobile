@@ -8,6 +8,10 @@ import 'package:flux/features/Auth/bloc/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
+  
+  // Demo user credentials
+  static const String _demoEmail = 'demo@gmail.com';
+  static const String _demoPassword = 'demo123';
 
   AuthBloc({required AuthRepository authRepository})
       : _authRepository = authRepository,
@@ -74,6 +78,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     log('AuthBloc: Login started for email: ${event.email}');
     emit(AuthState.loading());
     log('AuthBloc: Emitted loading state');
+
+    // Check for demo user credentials
+    if (event.email == _demoEmail && event.password == _demoPassword) {
+      log('AuthBloc: Demo user login detected');
+      
+      // Create a demo user with a fake token
+      final user = User(
+        email: _demoEmail,
+        displayName: 'Demo User',
+      );
+      
+      final demoToken = 'demo_token_${DateTime.now().millisecondsSinceEpoch}';
+      log('AuthBloc: Created demo user with token: ${demoToken.substring(0, min(10, demoToken.length))}...');
+      
+      // Create the authentication state
+      final authState = AuthState.authenticated(user, demoToken);
+      log('AuthBloc: Created authenticated state for demo user');
+      
+      // Emit the authenticated state
+      emit(authState);
+      log('AuthBloc: Emitted authenticated state for demo user');
+      
+      return; // Skip API call for demo user
+    }
 
     try {
       log('AuthBloc: Calling login API');

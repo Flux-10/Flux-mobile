@@ -10,5 +10,8 @@ class Routes {
   static const String profileCreate = '/profile-create';
   static const String verificationSuccess = '/verification-success';
 
+  static const String profile = '/profile';
+  static const String settings = '/settings';
+
   //Add routes here
 }
