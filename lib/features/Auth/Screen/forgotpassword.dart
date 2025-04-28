@@ -49,7 +49,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         backgroundColor: AppConstants.bg,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppConstants.primary),
+          icon: Icon(Icons.arrow_back, color: AppConstants.primary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -121,7 +121,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                     const SizedBox(height: 32),
                     state.status == AuthStatus.loading
-                        ? const Center(
+                        ? Center(
                             child: CircularProgressIndicator(
                               color: AppConstants.primary,
                             ),

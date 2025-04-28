@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flux/core/router/routes.dart';
+import 'package:flux/core/theme/theme_provider.dart';
 import 'package:flux/core/util/constants.dart';
 import 'package:flux/core/widgets/bottomnavbar.dart';
 import 'package:flux/features/Auth/bloc/auth_bloc.dart';
 import 'package:flux/features/Auth/bloc/auth_state.dart';
+import 'package:flux/features/settings/screens/theme_demo_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -14,22 +17,23 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
     final isAuthenticated = authState.status == AuthStatus.authenticated;
+    final themeProvider = Provider.of<ThemeProvider>(context);
     
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppConstants.bg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppConstants.bg,
         elevation: 0,
         title: Text(
           'Settings',
           style: GoogleFonts.manrope(
-            color: Colors.black87,
+            color: AppConstants.primary,
             fontSize: 24,
             fontWeight: FontWeight.w700,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: AppConstants.primary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -81,14 +85,30 @@ class SettingsScreen extends StatelessWidget {
                 value: true,
                 onChanged: (value) {
                   // Implement notification settings
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Notification settings coming soon')),
+                  );
                 },
               ),
               _buildSettingItemWithSwitch(
                 icon: Icons.dark_mode_outlined,
                 title: 'Dark Mode',
-                value: false,
+                value: themeProvider.isDarkMode,
                 onChanged: (value) {
-                  // Implement theme change
+                  // Toggle theme using the provider
+                  themeProvider.toggleTheme();
+                },
+              ),
+              _buildSettingItem(
+                icon: Icons.palette_outlined,
+                title: 'Theme Preview',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ThemeDemoScreen(),
+                    ),
+                  );
                 },
               ),
               
@@ -123,6 +143,7 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: const CustomBottomNav(),
     );
   }
   
@@ -131,13 +152,13 @@ class SettingsScreen extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 32,
-          backgroundColor: AppConstants.primary.withOpacity(0.2),
+          backgroundColor: AppConstants.outlinebg.withOpacity(0.2),
           child: Text(
             state.user!.displayName.isNotEmpty 
               ? state.user!.displayName[0].toUpperCase()
               : '?',
             style: GoogleFonts.manrope(
-              color: AppConstants.primary,
+              color: AppConstants.outlinebg,
               fontSize: 24,
               fontWeight: FontWeight.w700,
             ),
@@ -151,7 +172,7 @@ class SettingsScreen extends StatelessWidget {
               Text(
                 state.user!.displayName,
                 style: GoogleFonts.manrope(
-                  color: Colors.black87,
+                  color: AppConstants.primary,
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
@@ -159,7 +180,7 @@ class SettingsScreen extends StatelessWidget {
               Text(
                 state.user!.email,
                 style: GoogleFonts.manrope(
-                  color: Colors.black54,
+                  color: AppConstants.labelText,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -177,7 +198,7 @@ class SettingsScreen extends StatelessWidget {
       child: Text(
         title,
         style: GoogleFonts.manrope(
-          color: Colors.black87,
+          color: AppConstants.primary,
           fontSize: 16,
           fontWeight: FontWeight.w700,
         ),
@@ -191,16 +212,16 @@ class SettingsScreen extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return ListTile(
-      leading: Icon(icon, color: AppConstants.primary),
+      leading: Icon(icon, color: AppConstants.outlinebg),
       title: Text(
         title,
         style: GoogleFonts.manrope(
-          color: Colors.black87,
+          color: AppConstants.primary,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
       ),
-      trailing: const Icon(Icons.chevron_right, color: Colors.black54),
+      trailing: Icon(Icons.chevron_right, color: AppConstants.labelText),
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
     );
@@ -213,11 +234,11 @@ class SettingsScreen extends StatelessWidget {
     required ValueChanged<bool> onChanged,
   }) {
     return ListTile(
-      leading: Icon(icon, color: AppConstants.primary),
+      leading: Icon(icon, color: AppConstants.outlinebg),
       title: Text(
         title,
         style: GoogleFonts.manrope(
-          color: Colors.black87,
+          color: AppConstants.primary,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -225,7 +246,7 @@ class SettingsScreen extends StatelessWidget {
       trailing: Switch(
         value: value,
         onChanged: onChanged,
-        activeColor: AppConstants.primary,
+        activeColor: AppConstants.outlinebg,
       ),
       contentPadding: EdgeInsets.zero,
     );
@@ -274,7 +295,7 @@ class SettingsScreen extends StatelessWidget {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppConstants.primary,
+          backgroundColor: AppConstants.outlinebg,
           padding: const EdgeInsets.symmetric(vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -296,10 +317,12 @@ class SettingsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: AppConstants.bg,
         title: Text(
           'About Fluxx',
           style: GoogleFonts.manrope(
             fontWeight: FontWeight.bold,
+            color: AppConstants.primary,
           ),
         ),
         content: Column(
@@ -308,18 +331,22 @@ class SettingsScreen extends StatelessWidget {
           children: [
             Text(
               'Version 1.0.0',
-              style: GoogleFonts.manrope(),
+              style: GoogleFonts.manrope(
+                color: AppConstants.primary,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               'Fluxx is a social media platform for sharing moments and connecting with friends.',
-              style: GoogleFonts.manrope(),
+              style: GoogleFonts.manrope(
+                color: AppConstants.primary,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
               '© 2023 Fluxx Team',
               style: GoogleFonts.manrope(
-                color: Colors.grey,
+                color: AppConstants.labelText,
                 fontSize: 12,
               ),
             ),
@@ -331,7 +358,7 @@ class SettingsScreen extends StatelessWidget {
             child: Text(
               'Close',
               style: GoogleFonts.manrope(
-                color: AppConstants.primary,
+                color: AppConstants.outlinebg,
               ),
             ),
           ),

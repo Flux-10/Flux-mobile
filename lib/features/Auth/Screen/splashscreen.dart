@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             // TODO: Add app logo here
             Text(
-              'Fluxx',
+              'Fluxx Rants',
               style: GoogleFonts.manrope(
                 color: AppConstants.primary,
                 fontSize: 64.0,

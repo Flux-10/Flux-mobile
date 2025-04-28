@@ -110,7 +110,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
         backgroundColor: AppConstants.bg,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppConstants.primary),
+          icon: Icon(Icons.arrow_back, color: AppConstants.primary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -241,7 +241,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                       ),
                       const SizedBox(height: 32),
                       if (state.status == AuthStatus.loading)
-                        const Center(
+                        Center(
                           child: CircularProgressIndicator(
                             color: AppConstants.primary,
                           ),

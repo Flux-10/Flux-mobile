@@ -609,7 +609,7 @@ class _ProfileCreateScreenState extends State<ProfileCreateScreen> {
                   
                   // Create profile button
                   _isLoading
-                    ? const Center(
+                    ? Center(
                         child: CircularProgressIndicator(
                           color: AppConstants.primary,
                         ),

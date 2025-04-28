@@ -7,7 +7,14 @@ import 'package:flux/core/widgets/bottomnavbar.dart';
 import 'package:flux/features/Auth/bloc/auth_bloc.dart';
 import 'package:flux/features/Auth/bloc/auth_event.dart';
 import 'package:flux/features/Auth/bloc/auth_state.dart';
+import 'package:flux/features/Tweetpost/screens/post_detail_screen.dart';
+import 'package:flux/features/home/screens/tasks_feed.dart';
+import 'package:flux/features/home/screens/rants_feed.dart';
+import 'package:flux/features/home/screens/post_task_screen.dart';
+import 'package:flux/features/home/screens/post_rant_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:flux/core/theme/theme_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,59 +23,22 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   
-  // Sample data for feed
-  final List<Map<String, dynamic>> _feedItems = [
-    {
-      'username': 'user1',
-      'caption': 'This is my first Fluxx post! #awesome #fluxx',
-      'likes': 42,
-      'comments': 7,
-      'color': Colors.purple.shade300, // Placeholder for actual content
-    },
-    {
-      'username': 'techguru',
-      'caption': 'Check out this cool new feature in Flutter 3.0! #flutter #dev',
-      'likes': 128,
-      'comments': 24,
-      'color': Colors.blue.shade300,
-    },
-    {
-      'username': 'traveler',
-      'caption': 'Beautiful sunset at the beach today! #travel #sunset',
-      'likes': 256,
-      'comments': 18,
-      'color': Colors.orange.shade300,
-    },
-    {
-      'username': 'foodie',
-      'caption': 'Made this delicious pasta today! Recipe in comments. #food #homemade',
-      'likes': 89,
-      'comments': 15,
-      'color': Colors.green.shade300,
-    },
-    {
-      'username': 'artist',
-      'caption': 'My latest artwork. What do you think? #art #digital',
-      'likes': 310,
-      'comments': 42,
-      'color': Colors.red.shade300,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
+  }
   
   @override
   void dispose() {
-    _pageController.dispose();
+    _tabController.dispose();
     super.dispose();
-  }
-
-  void _onPageChanged(int page) {
-    setState(() {
-      _currentPage = page;
-    });
   }
 
   @override
@@ -77,40 +47,62 @@ class _HomeScreenState extends State<HomeScreen> {
     final authState = context.watch<AuthBloc>().state;
     
     return Scaffold(
-      backgroundColor: Colors.black,
-      extendBodyBehindAppBar: true,
+      backgroundColor: AppConstants.bg,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppConstants.bg,
         elevation: 0,
         title: Text(
-          'Fluxx',
+          'Flux',
           style: GoogleFonts.manrope(
-            color: Colors.white,
+            color: AppConstants.primary,
             fontSize: 24.0,
             fontWeight: FontWeight.w700,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.mail_outline, color: AppConstants.primary),
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.messages);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.notifications_outlined, color: AppConstants.primary),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Notifications coming soon')),
+              );
+            },
+          ),
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: AppConstants.primary,
+          unselectedLabelColor: AppConstants.labelText,
+          indicatorColor: AppConstants.outlinebg,
+          indicatorWeight: 3,
+          tabs: const [
+            Tab(text: 'Tasks'),
+            Tab(text: 'Rants'),
+          ],
+        ),
       ),
       body: authState.status == AuthStatus.authenticated
-          ? PageView.builder(
-              controller: _pageController,
-              scrollDirection: Axis.vertical,
-              onPageChanged: _onPageChanged,
-              itemCount: 100, // Simulate "infinite" scroll with a large number
-              itemBuilder: (context, index) {
-                // Loop through our sample data
-                final item = _feedItems[index % _feedItems.length];
-                return _buildFeedItem(item);
-              },
+          ? TabBarView(
+              controller: _tabController,
+              children: const [
+                TasksFeed(),
+                RantsFeed(),
+              ],
             )
           : Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Sign in to view your feed',
+                    'Sign in to view feeds',
                     style: GoogleFonts.manrope(
-                      color: Colors.white,
+                      color: AppConstants.primary,
                       fontSize: 18.0,
                       fontWeight: FontWeight.w600,
                     ),
@@ -125,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppConstants.primary,
+                      backgroundColor: AppConstants.outlinebg,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 32, 
                         vertical: 12,
@@ -142,147 +134,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-      bottomNavigationBar: const CustomBottomNav(),
-    );
-  }
-  
-  Widget _buildFeedItem(Map<String, dynamic> item) {
-    return Container(
-      color: Colors.black,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Content placeholder (would be video in real app)
-          Container(
-            color: item['color'],
-            child: Center(
+      floatingActionButton: authState.status == AuthStatus.authenticated
+          ? FloatingActionButton(
+              onPressed: () {
+                // Show different creation screen based on current tab
+                if (_tabController.index == 0) {
+                  // Tasks tab
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const PostTaskScreen()),
+                  );
+                } else {
+                  // Rants tab
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const PostRantScreen()),
+                  );
+                }
+              },
+              backgroundColor: AppConstants.outlinebg,
               child: Icon(
-                Icons.play_circle_fill,
-                size: 80,
-                color: Colors.white.withOpacity(0.7),
+                _tabController.index == 0 ? Icons.add_task : Icons.chat_bubble,
+                color: Colors.white,
               ),
-            ),
-          ),
-          
-          // Overlay gradient at bottom for better text visibility
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 200,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.7),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          
-          // User info and caption
-          Positioned(
-            left: 16,
-            right: 100,
-            bottom: 90,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.grey.shade800,
-                      child: Text(
-                        item['username'][0].toUpperCase(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      '@${item['username']}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    OutlinedButton(
-                      onPressed: () {},
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.white),
-                        minimumSize: const Size(40, 25),
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                      ),
-                      child: const Text(
-                        'Follow',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  item['caption'],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          
-          // Action buttons
-          Positioned(
-            right: 16,
-            bottom: 90,
-            child: Column(
-              children: [
-                _buildActionButton(Icons.favorite, item['likes'].toString()),
-                _buildActionButton(Icons.chat_bubble_outline, item['comments'].toString()),
-                _buildActionButton(Icons.reply, 'Share'),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  
-  Widget _buildActionButton(IconData icon, String label) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            color: Colors.white,
-            size: 30,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
+            )
+          : null,
+      bottomNavigationBar: const CustomBottomNav(),
     );
   }
 }

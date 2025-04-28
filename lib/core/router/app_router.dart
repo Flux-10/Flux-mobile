@@ -9,10 +9,17 @@ import 'package:flux/features/Auth/Screen/otp_verification.dart';
 import 'package:flux/features/Auth/Screen/reset_password.dart';
 import 'package:flux/features/Auth/Screen/splashscreen.dart';
 import 'package:flux/features/Auth/Screen/verification_success.dart';
+import 'package:flux/features/Tweetpost/screens/post_detail_screen.dart';
 import 'package:flux/features/home/screens/home.dart';
+import 'package:flux/features/home/screens/post_task_screen.dart';
+import 'package:flux/features/home/screens/post_rant_screen.dart';
+import 'package:flux/features/home/screens/task_detail_screen/task_detail_screen.dart';
+import 'package:flux/features/messages/screens/messages_screen.dart';
+import 'package:flux/features/notifications/screens/notifications_screen.dart';
 import 'package:flux/features/profile/screen/profile_create_screen.dart';
 import 'package:flux/features/profile/screen/profile_screen.dart';
 import 'package:flux/features/settings/screens/settings.dart';
+import 'package:flux/features/settings/screens/theme_demo_screen.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -33,6 +40,9 @@ class AppRouter {
       
       case Routes.home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
+      
+      case Routes.messages:
+        return MaterialPageRoute(builder: (_) => const MessagesScreen());
       
       case Routes.forgotPassword:
         return MaterialPageRoute(builder: (_) => const ForgotPasswordPage());
@@ -80,6 +90,51 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => VerificationSuccessScreen(
             email: email,
+          ),
+        );
+      
+      case Routes.postDetail:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final post = args?['post'] as Map<String, dynamic>? ?? {};
+        final focusBid = args?['focusBid'] as bool? ?? false;
+        
+        // Check if it's a task post or a rant post
+        if (post.containsKey('category')) {
+          // It's a task post, use TaskDetailScreen
+          return MaterialPageRoute(
+            builder: (_) => TaskDetailScreen(
+              task: post,
+              focusBid: focusBid,
+            ),
+          );
+        } else {
+          // It's a rant post, use PostDetailScreen
+          return MaterialPageRoute(
+            builder: (_) => PostDetailScreen(post: post),
+          );
+        }
+      
+      case Routes.themeDemo:
+        return MaterialPageRoute(builder: (_) => const ThemeDemoScreen());
+      
+      case Routes.postTask:
+        return MaterialPageRoute(builder: (_) => const PostTaskScreen());
+      
+      case Routes.postRant:
+        return MaterialPageRoute(builder: (_) => const PostRantScreen());
+      
+      case Routes.notifications:
+        return MaterialPageRoute(builder: (_) => const NotificationsScreen());
+      
+      case Routes.taskDetail:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final task = args?['task'] as Map<String, dynamic>? ?? {};
+        final focusBid = args?['focusBid'] as bool? ?? false;
+        
+        return MaterialPageRoute(
+          builder: (_) => TaskDetailScreen(
+            task: task,
+            focusBid: focusBid,
           ),
         );
       

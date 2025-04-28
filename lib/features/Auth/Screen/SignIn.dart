@@ -108,7 +108,7 @@ class _SignInPageState extends State<SignInPage> {
                   child: Container(
                     width: 100.0,
                     height: double.infinity,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AppConstants.bg,
                     ),
                     alignment: const AlignmentDirectional(0.0, -1.0),
@@ -122,9 +122,9 @@ class _SignInPageState extends State<SignInPage> {
                             Container(
                               width: double.infinity,
                               height: 140.0,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 color: AppConstants.bg,
-                                borderRadius: BorderRadius.only(
+                                borderRadius: const BorderRadius.only(
                                   bottomLeft: Radius.circular(16.0),
                                   bottomRight: Radius.circular(16.0),
                                   topLeft: Radius.circular(0.0),
@@ -138,7 +138,7 @@ class _SignInPageState extends State<SignInPage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Text(
-                                      'Fluxx',
+                                      'Fluxx Rants',
                                       style: GoogleFonts.manrope(
                                         color: AppConstants.primary,
                                         fontSize: 50.0,
@@ -155,7 +155,7 @@ class _SignInPageState extends State<SignInPage> {
                               constraints: const BoxConstraints(
                                 maxWidth: 430.0,
                               ),
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 color: AppConstants.bg,
                               ),
                               child: Align(
@@ -168,7 +168,7 @@ class _SignInPageState extends State<SignInPage> {
                                     children: [
 
                                       Text(
-                                        'Welcome back to Fluxx',
+                                        'Welcome back to Fluxx Rants',
                                         style: GoogleFonts.urbanist(
                                           color: AppConstants.primary,
                                           fontSize: 32.0,

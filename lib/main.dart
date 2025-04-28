@@ -4,7 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flux/core/router/app_router.dart';
 import 'package:flux/core/router/routes.dart';
+import 'package:flux/core/theme/theme_provider.dart';
+import 'package:flux/core/util/constants.dart';
 import 'package:flux/core/util/dependency_injection.dart';
+import 'package:provider/provider.dart';
 
 // Custom BLoC observer for debugging
 class SimpleBlocObserver extends BlocObserver {
@@ -42,7 +45,12 @@ void main() {
   // Log application start
   developer.log('Starting Flux app');
   
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -50,6 +58,9 @@ class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    // Listen to theme changes
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    
     return AppDependencies(
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
@@ -60,12 +71,33 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Flux',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              primaryColor: AppConstants.primary,
+              colorScheme: ColorScheme.fromSwatch().copyWith(
+                primary: AppConstants.primary,
+                secondary: AppConstants.outlinebg,
+                background: AppConstants.bg,
+              ),
+              scaffoldBackgroundColor: AppConstants.bg,
+              appBarTheme: AppBarTheme(
+                backgroundColor: AppConstants.bg,
+                elevation: 0,
+                iconTheme: IconThemeData(color: AppConstants.primary),
+                titleTextStyle: TextStyle(color: AppConstants.primary),
+              ),
+              textTheme: TextTheme(
+                bodyLarge: TextStyle(color: AppConstants.primary),
+                bodyMedium: TextStyle(color: AppConstants.primary),
+                bodySmall: TextStyle(color: AppConstants.labelText),
+              ),
+              inputDecorationTheme: InputDecorationTheme(
+                fillColor: AppConstants.primarybg,
+                labelStyle: TextStyle(color: AppConstants.labelText),
+              ),
+              iconTheme: IconThemeData(color: AppConstants.primary),
               visualDensity: VisualDensity.adaptivePlatformDensity,
-              scaffoldBackgroundColor: const Color(0xFFF5F5F5), // Off-white color
             ),
             onGenerateRoute: AppRouter.generateRoute,
-            initialRoute: Routes.splash,
+            initialRoute: Routes.onboard,
           );
         },
       ),

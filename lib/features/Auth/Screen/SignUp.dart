@@ -103,7 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: Container(
                     width: 100.0,
                     height: double.infinity,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AppConstants.bg,
                     ),
                     alignment: const AlignmentDirectional(0.0, -1.0),
@@ -117,9 +117,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             Container(
                               width: double.infinity,
                               height: 140.0,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 color: AppConstants.bg,
-                                borderRadius: BorderRadius.only(
+                                borderRadius: const BorderRadius.only(
                                   bottomLeft: Radius.circular(16.0),
                                   bottomRight: Radius.circular(16.0),
                                   topLeft: Radius.circular(0.0),
@@ -133,7 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Text(
-                                      'Fluxx',
+                                      'Fluxx Rants',
                                     
                                       style: GoogleFonts.manrope(
                                         color: AppConstants.primary,
@@ -162,7 +162,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               constraints: const BoxConstraints(
                                 maxWidth: 430.0,
                               ),
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 color: AppConstants.bg, 
                               ),
                               child: Align(
@@ -174,7 +174,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Let\'s create your Fluxx profile',
+                                        'Let\'s create your Fluxx Rants profile',
                                         style: GoogleFonts.urbanist(
                                           color: AppConstants.primary,
                                           fontSize: 32.0,
@@ -278,7 +278,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                       Padding(
                                         padding: const EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 24.0),
                                         child: state.status == AuthStatus.loading
-                                            ? const Center(
+                                            ? Center(
                                                 child: CircularProgressIndicator(
                                                   color: AppConstants.primary,
                                                 ),

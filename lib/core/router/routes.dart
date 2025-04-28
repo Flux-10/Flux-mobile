@@ -12,6 +12,15 @@ class Routes {
 
   static const String profile = '/profile';
   static const String settings = '/settings';
+  static const String messages = '/messages';
+  static const String postDetail = '/post-detail';
+  static const String themeDemo = '/theme-demo';
+  
+  // New routes
+  static const String postTask = '/post-task';
+  static const String postRant = '/post-rant';
+  static const String notifications = '/notifications';
+  static const String taskDetail = '/task-detail';
 
   //Add routes here
 }

@@ -20,19 +20,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     OnboardingContent(
       title: 'Meet Your Classmates',
       description: 'Connect with students in your classes, clubs, or dorms to build your campus network',
-      image: 'assets/images/onboard_campus1.png',
+      image: 'assets/images/adduser.png',
     ),
     OnboardingContent(
       title: 'Stay in the Loop',
       description: 'Discover campus events, study groups, and parties happening around you',
-      image: 'assets/images/onboard_campus2.png',
+      image: 'assets/images/connect.png',
     ),
     OnboardingContent(
       title: 'Share Your Campus Vibe',
       description: 'Post about your uni life, from lecture moments to late-night study sessions',
-      image: 'assets/images/onboard_campus3.png',
+      image: 'assets/images/message.png',
+    ),
+    OnboardingContent(
+      title: 'Share Your Campus Vibe',
+      description: 'Post about your uni life, from lecture moments to late-night study sessions',
+      image: 'assets/images/network.png',
     ),
   ];
+  
+  void _skipToLastPage() {
+    _pageController.animateToPage(
+      _contents.length - 1,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,16 +69,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Image placeholder
-                        Container(
-                          height: 300,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: AppConstants.primarybg,
-                            borderRadius: BorderRadius.circular(20),
+                        // Image
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            _contents[index].image,
+                            height: 300,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              // Show error placeholder if image fails to load
+                              return Container(
+                                height: 300,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: AppConstants.primarybg,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.image_not_supported,
+                                    size: 60,
+                                    color: Colors.white.withOpacity(0.7),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                          // TODO: Add actual image
-                          // child: Image.asset(_contents[index].image),
                         ),
                         const SizedBox(height: 40),
                         Text(
@@ -99,7 +129,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   SmoothPageIndicator(
                     controller: _pageController,
                     count: _contents.length,
-                    effect: const ExpandingDotsEffect(
+                    effect: ExpandingDotsEffect(
                       dotColor: AppConstants.primarybg,
                       activeDotColor: AppConstants.outlinebg,
                       dotHeight: 8,
@@ -108,18 +138,50 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  CustomElevatedButton(
-                    text: _currentPage == _contents.length - 1 ? 'Get Started' : 'Next',
-                    onPressed: () {
-                      if (_currentPage == _contents.length - 1) {
-                        Navigator.pushReplacementNamed(context, Routes.signup);
-                      } else {
-                        _pageController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      }
-                    },
+                  
+                  Row(
+                    children: [
+                      // Skip button
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: _skipToLastPage,
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppConstants.primary),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            'Skip',
+                            style: GoogleFonts.manrope(
+                              color: AppConstants.primary,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      
+                      const SizedBox(width: 16),
+                      
+                      // Next/Get Started button
+                      Expanded(
+                        child: CustomElevatedButton(
+                          text: _currentPage == _contents.length - 1 ? 'Get Started' : 'Next',
+                          onPressed: () {
+                            if (_currentPage == _contents.length - 1) {
+                              Navigator.pushReplacementNamed(context, Routes.signup);
+                            } else {
+                              _pageController.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
